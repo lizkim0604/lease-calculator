@@ -1,0 +1,1217 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>리스 회계 워크시트 — K-IFRS 1116</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@500;700&family=Noto+Sans+KR:wght@400;500;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --paper: #FAF8F2;
+    --paper-2: #F1EDE1;
+    --ink: #1C2B3A;
+    --ink-soft: #4A5A68;
+    --rule: #C9C2AC;
+    --accent: #2F6F5E;
+    --accent-2: #8C6A3F;
+    --danger: #A6432D;
+    --liability: #1C2B3A;
+    --rou: #2F6F5E;
+    --shadow: 0 1px 0 rgba(28,43,58,0.06);
+  }
+  *{box-sizing:border-box;}
+  body{
+    margin:0;
+    background:
+      repeating-linear-gradient(180deg, transparent, transparent 27px, rgba(28,43,58,0.045) 28px),
+      var(--paper);
+    color:var(--ink);
+    font-family:'Noto Sans KR', sans-serif;
+    line-height:1.55;
+    padding:0 0 64px 0;
+  }
+  .wrap{max-width:1040px; margin:0 auto; padding:0 24px;}
+  header.top{
+    padding:40px 0 24px 0; border-bottom:2px solid var(--ink); margin-bottom:28px;
+    display:flex; justify-content:space-between; align-items:flex-end; gap:16px; flex-wrap:wrap;
+  }
+  header.top .stamp{
+    font-family:'IBM Plex Mono',monospace; font-size:11px; letter-spacing:0.12em; color:var(--accent);
+    border:1px solid var(--accent); padding:4px 9px; border-radius:2px; text-transform:uppercase; white-space:nowrap;
+  }
+  h1{font-family:'Noto Serif KR', serif; font-size:30px; font-weight:700; margin:0 0 6px 0; letter-spacing:-0.01em;}
+  header.top p{margin:0; color:var(--ink-soft); font-size:14px;}
+  section.card{
+    background:rgba(255,255,255,0.55); border:1px solid var(--rule); border-radius:3px;
+    padding:26px 28px; margin-bottom:22px; box-shadow:var(--shadow);
+  }
+  .card-head{display:flex; align-items:baseline; gap:10px; margin-bottom:18px; border-bottom:1px dashed var(--rule); padding-bottom:12px;}
+  .card-head .no{font-family:'IBM Plex Mono',monospace; color:var(--accent-2); font-size:13px; font-weight:600;}
+  .card-head h2{font-family:'Noto Serif KR', serif; font-size:19px; margin:0; font-weight:700;}
+  .card-head .sub{margin-left:auto; font-size:12px; color:var(--ink-soft); font-family:'IBM Plex Mono',monospace;}
+  label{display:block; font-size:12.5px; color:var(--ink-soft); margin-bottom:5px; font-weight:500;}
+  textarea, input[type=text], input[type=number], input[type=password], select{
+    width:100%; font-family:'Noto Sans KR',sans-serif; font-size:14px;
+    padding:9px 11px; border:1px solid var(--rule); border-radius:2px; background:#fff; color:var(--ink);
+  }
+  textarea:focus, input:focus, select:focus{outline:2px solid var(--accent); outline-offset:1px;}
+  textarea{min-height:150px; resize:vertical; font-family:'IBM Plex Mono',monospace; font-size:12.5px; line-height:1.6;}
+  .row{display:grid; grid-template-columns:1fr 1fr; gap:16px;}
+  .row3{display:grid; grid-template-columns:1fr 1fr 1fr; gap:16px;}
+  .field{margin-bottom:14px;}
+  .hint{font-size:11.5px; color:var(--ink-soft); margin-top:4px;}
+  .btn{
+    font-family:'Noto Sans KR',sans-serif; font-weight:700; font-size:14px;
+    background:var(--ink); color:var(--paper); border:none; padding:11px 20px;
+    border-radius:2px; cursor:pointer; letter-spacing:0.01em;
+  }
+  .btn:hover{background:var(--accent);}
+  .btn:disabled{background:#9aa3ab; cursor:not-allowed;}
+  .btn.small{padding:6px 12px; font-size:12.5px;}
+  .btn.ghost{background:transparent; color:var(--ink); border:1px solid var(--ink);}
+  .btn.ghost:hover{background:var(--ink); color:var(--paper);}
+  .btn.danger-o{background:transparent; color:var(--danger); border:1px solid var(--danger); padding:5px 10px; font-size:12px;}
+  .btn.danger-o:hover{background:var(--danger); color:#fff;}
+  .btn-row{display:flex; gap:10px; align-items:center; margin-top:16px; flex-wrap:wrap;}
+  .filebar{display:flex; align-items:center; gap:12px; margin-bottom:12px; flex-wrap:wrap;}
+  .filebar input[type=file]{font-size:13px;}
+  .status{font-size:13px; font-family:'IBM Plex Mono',monospace;}
+  .status.busy{color:var(--accent-2);}
+  .status.err{color:var(--danger);}
+  .status.ok{color:var(--accent);}
+  .callout{border-left:3px solid var(--accent); background:var(--paper-2); padding:12px 14px; font-size:13px; border-radius:0 2px 2px 0; margin:14px 0;}
+  .callout.warn{border-left-color:var(--danger);}
+  .callout b{color:var(--ink);}
+  input.field-error{border-color:var(--danger); box-shadow:0 0 0 1px var(--danger);}
+  fieldset{border:1px solid var(--rule); border-radius:2px; padding:16px 18px; margin:0 0 16px 0;}
+  legend{font-family:'IBM Plex Mono',monospace; font-size:11.5px; color:var(--accent-2); padding:0 6px; text-transform:uppercase; letter-spacing:0.08em;}
+  .summary-grid{display:grid; grid-template-columns:repeat(4,1fr); gap:1px; background:var(--rule); border:1px solid var(--rule);}
+  .summary-cell{background:#fff; padding:16px 14px;}
+  .summary-cell .k{font-size:11.5px; color:var(--ink-soft); margin-bottom:6px;}
+  .summary-cell .v{font-family:'IBM Plex Mono',monospace; font-size:19px; font-weight:600;}
+  .summary-cell .v.liab{color:var(--liability);}
+  .summary-cell .v.rou{color:var(--rou);}
+  table{width:100%; border-collapse:collapse; font-size:12.5px; font-family:'IBM Plex Mono',monospace;}
+  thead th{position:sticky; top:0; background:var(--ink); color:var(--paper); padding:8px 8px; text-align:right; font-weight:600; font-size:11px;}
+  thead th:first-child, tbody td:first-child{text-align:left;}
+  tbody td{padding:6px 8px; text-align:right; border-bottom:1px solid var(--paper-2);}
+  tbody tr:nth-child(even){background:rgba(28,43,58,0.03);}
+  tbody tr.event-row{background:rgba(140,106,63,0.16) !important;}
+  .tablewrap{max-height:420px; overflow:auto; border:1px solid var(--rule);}
+  .je{font-family:'IBM Plex Mono',monospace; font-size:12.5px; background:#fff; border:1px solid var(--rule); padding:14px 16px; margin-bottom:12px; border-radius:2px;}
+  .je .t{font-weight:700; margin-bottom:8px; font-family:'Noto Sans KR',sans-serif; font-size:13px;}
+  .je table{font-size:12.5px;}
+  .je td{padding:3px 6px; border:none;}
+  footer.note{margin-top:28px; font-size:12px; color:var(--ink-soft); border-top:1px dashed var(--rule); padding-top:16px;}
+  .hidden{display:none !important;}
+  .mode-grid{display:grid; grid-template-columns:repeat(3,1fr); gap:12px;}
+  .mode-btn{
+    text-align:left; border:1px solid var(--rule); background:#fff; border-radius:3px; padding:16px 16px;
+    cursor:pointer; font-family:'Noto Sans KR',sans-serif;
+  }
+  .mode-btn .m-title{font-weight:700; font-size:14.5px; margin-bottom:4px;}
+  .mode-btn .m-desc{font-size:12px; color:var(--ink-soft); line-height:1.45;}
+  .mode-btn.active{border-color:var(--ink); background:var(--paper-2); box-shadow:inset 0 0 0 1px var(--ink);}
+  .event-item{border:1px solid var(--rule); border-radius:2px; padding:12px 14px; margin-bottom:10px; background:#fff;}
+  .event-item .row3{margin-bottom:10px;}
+  .event-item-head{display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;}
+  .event-item-head .tag{font-family:'IBM Plex Mono',monospace; font-size:11px; color:var(--accent-2);}
+  .badge-count{
+    display:inline-block; background:var(--accent-2); color:#fff; font-size:11px; font-family:'IBM Plex Mono',monospace;
+    border-radius:9px; padding:1px 7px; margin-left:6px;
+  }
+  @media (max-width:640px){ .row, .row3, .summary-grid, .mode-grid{grid-template-columns:1fr;} }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header class="top">
+    <div>
+      <h1>리스 회계 워크시트</h1>
+      <p>계약서를 올리면 AI가 조건을 읽고, K-IFRS 제1116호 기준으로 회계처리를 계산합니다.</p>
+    </div>
+    <div class="stamp">K-IFRS 1116</div>
+  </header>
+
+  <!-- STEP 00 : MODE SELECT -->
+  <section class="card">
+    <div class="card-head"><span class="no">00</span><h2>거래유형 선택</h2></div>
+    <div class="mode-grid" id="modeGrid">
+      <div class="mode-btn active" data-mode="general">
+        <div class="m-title">일반 리스이용자</div>
+        <div class="m-desc">리스이용자 관점. 리스부채·사용권자산 계산 + 변동리스료 재측정, 리스변경 반영.</div>
+      </div>
+      <div class="mode-btn" data-mode="slb">
+        <div class="m-title">판매후리스 (매도자-리스이용자)</div>
+        <div class="m-desc">자산을 매각하고 다시 리스로 사용하는 거래. 판매 요건 충족 여부에 따라 처리가 달라집니다.</div>
+      </div>
+      <div class="mode-btn" data-mode="salestype">
+        <div class="m-title">판매형리스 (제조자·판매자 리스제공자)</div>
+        <div class="m-desc">리스제공자 관점. 순투자, 매출·매출원가·판매손익, 이자수익 상각표를 계산합니다.</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- STEP 01 : INPUT -->
+  <section class="card">
+    <div class="card-head">
+      <span class="no">01</span><h2>계약서 입력</h2>
+      <span class="sub">.txt 업로드 또는 붙여넣기</span>
+    </div>
+    <div class="filebar">
+      <input type="file" id="fileInput" accept=".txt,text/plain">
+      <span class="hint">텍스트(.txt) 계약서를 업로드하면 아래 칸에 자동으로 채워집니다.</span>
+    </div>
+    <div class="field">
+      <label for="contractText">계약서 원문</label>
+      <textarea id="contractText" placeholder="여기에 계약서 내용을 붙여넣거나, 위에서 파일을 업로드하세요."></textarea>
+    </div>
+    <fieldset>
+      <legend>Gemini API 설정</legend>
+      <div class="row">
+        <div class="field">
+          <label for="apiKey">Gemini API Key</label>
+          <input type="password" id="apiKey" placeholder="발급받은 API 키 입력 (또는 코드 상단 DEFAULT_API_KEY 상수에 직접 입력)">
+          <div class="hint">이 키는 이 브라우저 안에서만 사용되며 서버로 전송되지 않습니다.</div>
+        </div>
+        <div class="field">
+          <label for="modelSelect">모델</label>
+          <select id="modelSelect">
+            <option value="gemini-2.5-flash" selected>gemini-2.5-flash (권장, 저비용)</option>
+            <option value="gemini-3.5-flash">gemini-3.5-flash (최신, 고성능)</option>
+          </select>
+        </div>
+      </div>
+    </fieldset>
+    <div class="btn-row">
+      <button class="btn" id="extractBtn">① AI로 계약조건 추출</button>
+      <span class="status" id="extractStatus"></span>
+    </div>
+  </section>
+
+  <!-- STEP 02 : EXTRACTED TERMS -->
+  <section class="card hidden" id="termsCard">
+    <div class="card-head">
+      <span class="no">02</span><h2>추출된 계약조건</h2>
+      <span class="sub">AI가 읽은 값 — 필요시 직접 수정</span>
+    </div>
+    <div id="exemptionNotice"></div>
+
+    <!-- GENERAL LEASE FIELDS -->
+    <div id="fields-general">
+      <div class="row3">
+        <div class="field"><label>기초자산</label><input type="text" id="g_asset"></div>
+        <div class="field"><label>리스개시일</label><input type="text" id="g_start"></div>
+        <div class="field"><label>통화</label><input type="text" id="g_currency"></div>
+      </div>
+      <div class="row3">
+        <div class="field"><label>기본 리스기간(개월)</label><input type="number" id="g_term"></div>
+        <div class="field"><label>연장옵션 행사 개연성 높음?</label>
+          <select id="g_renewal_certain"><option value="false">아니오</option><option value="true">예</option></select>
+        </div>
+        <div class="field"><label>연장기간(개월)</label><input type="number" id="g_renewal_months"></div>
+      </div>
+      <div class="row3">
+        <div class="field"><label>지급액(1회)</label><input type="number" id="g_payment"></div>
+        <div class="field"><label>지급주기</label>
+          <select id="g_freq"><option value="monthly">매월</option><option value="quarterly">매분기</option><option value="semiannual">매반기</option><option value="annual">매년</option></select>
+        </div>
+        <div class="field"><label>지급시점</label>
+          <select id="g_timing"><option value="arrears">기말(후급)</option><option value="advance">기초(선급)</option></select>
+        </div>
+      </div>
+      <div class="row3">
+        <div class="field"><label>계약상 할인율(연,%) — 없으면 비워두기</label><input type="number" step="0.01" id="g_rate_stated"></div>
+        <div class="field"><label>사용할 할인율(연,%)</label><input type="number" step="0.01" id="g_rate_used"></div>
+        <div class="field"><label>구매선택권 행사 개연성 높음?</label>
+          <select id="g_purchase_certain"><option value="false">아니오</option><option value="true">예</option></select>
+        </div>
+      </div>
+      <div class="row3">
+        <div class="field"><label>구매선택권 행사가액</label><input type="number" id="g_purchase_price"></div>
+        <div class="field"><label>내용연수(개월)</label><input type="number" id="g_useful_life">
+          <div class="hint">구매선택권 행사가 확실하지 않으면 <b>리스기간과 내용연수 중 짧은 기간</b>으로 상각됩니다. 구매선택권 행사가 확실한 경우에만 내용연수 전체로 상각됩니다.</div>
+        </div>
+        <div class="field"><label>기초자산 저가 자산 여부</label>
+          <select id="g_low_value"><option value="false">아니오</option><option value="true">예</option></select>
+        </div>
+      </div>
+      <div class="row3">
+        <div class="field"><label>리스개설직접원가</label><input type="number" id="g_idc"></div>
+        <div class="field"><label>리스인센티브(수령액)</label><input type="number" id="g_incentive"></div>
+        <div class="field"><label>복구비용 추정치</label><input type="number" id="g_restoration"></div>
+      </div>
+      <div class="field"><label>AI 판단 메모</label><textarea id="g_notes" style="min-height:60px;"></textarea></div>
+
+      <fieldset>
+        <legend>변동리스료 재측정 · 리스변경 이벤트 <span class="badge-count" id="eventCount">0</span></legend>
+        <div class="hint" style="margin-bottom:10px;">
+          지수연동 리스료가 실제로 바뀌었거나(변동리스료 재측정), 계약 조건이 변경된 시점(리스변경)이 있다면 여기서 추가하세요.
+          최초 계약서에는 나타나지 않는, <b>발생 시점의 사건</b>이므로 직접 입력합니다.
+        </div>
+        <div id="eventsList"></div>
+        <button class="btn ghost small" id="addEventBtn" type="button">+ 이벤트 추가</button>
+      </fieldset>
+    </div>
+
+    <!-- SALE-AND-LEASEBACK FIELDS -->
+    <div id="fields-slb" class="hidden">
+      <div class="row3">
+        <div class="field"><label>기초자산</label><input type="text" id="s_asset"></div>
+        <div class="field"><label>매각일</label><input type="text" id="s_date"></div>
+        <div class="field"><label>통화</label><input type="text" id="s_currency"></div>
+      </div>
+      <div class="row3">
+        <div class="field"><label>매각 전 장부금액</label><input type="number" id="s_carrying"></div>
+        <div class="field"><label>기초자산 공정가치</label><input type="number" id="s_fairvalue"></div>
+        <div class="field"><label>매각대금(수취액)</label><input type="number" id="s_proceeds"></div>
+      </div>
+      <div class="field">
+        <label>이전이 K-IFRS 1115상 '판매'요건을 충족합니까? (사용자 최종 판단)</label>
+        <select id="s_qualifies"><option value="true">예 — 판매로 회계처리</option><option value="false">아니오 — 금융약정으로 회계처리</option></select>
+        <div class="hint">자산에 대한 통제가 실제로 매수자에게 이전되었는지가 핵심입니다. AI 판단은 참고용이며 최종 확인이 필요합니다.</div>
+      </div>
+      <fieldset>
+        <legend>리스백(재리스) 조건</legend>
+        <div class="row3">
+          <div class="field"><label>리스백 지급액(1회)</label><input type="number" id="s_payment"></div>
+          <div class="field"><label>지급주기</label>
+            <select id="s_freq"><option value="monthly">매월</option><option value="quarterly">매분기</option><option value="semiannual">매반기</option><option value="annual">매년</option></select>
+          </div>
+          <div class="field"><label>지급시점</label>
+            <select id="s_timing"><option value="arrears">기말(후급)</option><option value="advance">기초(선급)</option></select>
+          </div>
+        </div>
+        <div class="row3">
+          <div class="field"><label>리스백 기간(개월)</label><input type="number" id="s_term"></div>
+          <div class="field"><label>할인율(연,%) — 판매 인정 시 사용</label><input type="number" step="0.01" id="s_rate"></div>
+          <div class="field"><label>&nbsp;</label><div class="hint">금융약정으로 처리 시, 할인율을 비워두면 매각대금과 지급액으로 내재이자율을 자동 계산합니다.</div></div>
+        </div>
+      </fieldset>
+      <div class="field"><label>AI 판단 메모</label><textarea id="s_notes" style="min-height:60px;"></textarea></div>
+    </div>
+
+    <!-- SALES-TYPE LEASE FIELDS -->
+    <div id="fields-salestype" class="hidden">
+      <div class="row3">
+        <div class="field"><label>기초자산</label><input type="text" id="t_asset"></div>
+        <div class="field"><label>리스개시일</label><input type="text" id="t_start"></div>
+        <div class="field"><label>통화</label><input type="text" id="t_currency"></div>
+      </div>
+      <div class="row3">
+        <div class="field"><label>기초자산 공정가치</label><input type="number" id="t_fairvalue"></div>
+        <div class="field"><label>기초자산 원가(장부금액)</label><input type="number" id="t_cost"></div>
+        <div class="field"><label>리스개설직접원가(판매비용 처리)</label><input type="number" id="t_idc"></div>
+      </div>
+      <div class="row3">
+        <div class="field"><label>지급액(1회)</label><input type="number" id="t_payment"></div>
+        <div class="field"><label>지급주기</label>
+          <select id="t_freq"><option value="monthly">매월</option><option value="quarterly">매분기</option><option value="semiannual">매반기</option><option value="annual">매년</option></select>
+        </div>
+        <div class="field"><label>지급시점</label>
+          <select id="t_timing"><option value="arrears">기말(후급)</option><option value="advance">기초(선급)</option></select>
+        </div>
+      </div>
+      <div class="field"><label>리스기간(개월)</label><input type="number" id="t_term"></div>
+      <div class="row">
+        <div class="field"><label>보증잔존가치</label><input type="number" id="t_gres">
+          <div class="hint">리스이용자, 그 특수관계자, 또는 <b>리스제공자와 특수관계가 없는</b> 제3자가 보증한 금액(합계) — 매출액·순투자 계산에 모두 포함됩니다.</div>
+        </div>
+        <div class="field"><label>무보증잔존가치</label><input type="number" id="t_ures">
+          <div class="hint">보증이 전혀 없거나 <b>리스제공자의 특수관계자</b>만 보증한 금액 — 순투자에는 포함되지만 매출액에서는 제외되고 매출원가에서 차감됩니다.</div>
+        </div>
+      </div>
+      <div class="row3">
+        <div class="field"><label>리스제공자 내재이자율(연,%) — 없으면 비워두기</label><input type="number" step="0.01" id="t_rate">
+          <div class="hint">순투자(리스채권) 후속측정·이자수익 계산에 사용됩니다. 비워두면 공정가치·지급액·잔존가치로부터 자동 계산합니다.</div>
+        </div>
+        <div class="field"><label>시장이자율(일반 상거래 적용, 연 %)</label><input type="number" step="0.01" id="t_market_rate">
+          <div class="hint"><b>매출액·매출원가 계산에는 항상 이 이자율을 사용합니다</b>(K-IFRS 1116 문단 71(a)). 내재이자율이 낮든 높든 상관없이 적용되는 규정이며, 계약서에 보통 명시되지 않으므로 직접 입력하세요.</div>
+        </div>
+      </div>
+      <div class="field"><label>AI 판단 메모</label><textarea id="t_notes" style="min-height:60px;"></textarea></div>
+    </div>
+
+    <div class="btn-row">
+      <button class="btn" id="calcBtn">② 계산하기</button>
+      <span class="status" id="calcStatus"></span>
+    </div>
+  </section>
+
+  <!-- STEP 03 : RESULTS -->
+  <section class="card hidden" id="resultsCard">
+    <div class="card-head"><span class="no">03</span><h2 id="resultsTitle">최초 인식 요약</h2></div>
+    <div class="summary-grid" id="summaryGrid"></div>
+    <div id="resultsExtra"></div>
+  </section>
+
+  <section class="card hidden" id="scheduleCard">
+    <div class="card-head"><span class="no">04</span><h2 id="scheduleTitle">상각표</h2></div>
+    <div class="tablewrap">
+      <table>
+        <thead id="scheduleHead"></thead>
+        <tbody id="scheduleBody"></tbody>
+      </table>
+    </div>
+  </section>
+
+  <section class="card hidden" id="jeCard">
+    <div class="card-head"><span class="no">05</span><h2>회계처리(분개) 요약</h2></div>
+    <div id="jeBody"></div>
+  </section>
+
+  <footer class="note">
+    이 도구는 계산 편의를 위한 보조 자료이며 회계 감사 근거 자료로 그대로 사용할 수 없습니다.
+    반영되지 않는 항목: 전대리스, 외화환산, 매각대금과 공정가치가 다른 경우의 금융요소 조정,
+    사용량·성과 연동 변동리스료(발생 시 비용 처리 대상으로, 부채에 포함되지 않음), 손상(기대신용손실) 평가.
+    AI 추출 결과는 반드시 계약 원문과 대조해 확인하세요.
+  </footer>
+</div>
+
+<script>
+/* ===================== CONFIG ===================== */
+const DEFAULT_API_KEY = "";
+/* ==================================================== */
+
+let MODE = 'general';
+let eventRowSeq = 0;
+
+const els = {
+  fileInput: document.getElementById('fileInput'),
+  contractText: document.getElementById('contractText'),
+  apiKey: document.getElementById('apiKey'),
+  modelSelect: document.getElementById('modelSelect'),
+  extractBtn: document.getElementById('extractBtn'),
+  extractStatus: document.getElementById('extractStatus'),
+  termsCard: document.getElementById('termsCard'),
+  exemptionNotice: document.getElementById('exemptionNotice'),
+  calcBtn: document.getElementById('calcBtn'),
+  calcStatus: document.getElementById('calcStatus'),
+  resultsCard: document.getElementById('resultsCard'),
+  resultsTitle: document.getElementById('resultsTitle'),
+  summaryGrid: document.getElementById('summaryGrid'),
+  resultsExtra: document.getElementById('resultsExtra'),
+  scheduleCard: document.getElementById('scheduleCard'),
+  scheduleTitle: document.getElementById('scheduleTitle'),
+  scheduleHead: document.getElementById('scheduleHead'),
+  scheduleBody: document.getElementById('scheduleBody'),
+  jeCard: document.getElementById('jeCard'),
+  jeBody: document.getElementById('jeBody'),
+  eventsList: document.getElementById('eventsList'),
+  addEventBtn: document.getElementById('addEventBtn'),
+  eventCount: document.getElementById('eventCount'),
+};
+
+if (DEFAULT_API_KEY) els.apiKey.value = DEFAULT_API_KEY;
+
+/* ---------------- mode switching ---------------- */
+document.getElementById('modeGrid').addEventListener('click', (e) => {
+  const btn = e.target.closest('.mode-btn');
+  if (!btn) return;
+  MODE = btn.dataset.mode;
+  document.querySelectorAll('.mode-btn').forEach(b => b.classList.toggle('active', b === btn));
+  document.getElementById('fields-general').classList.toggle('hidden', MODE !== 'general');
+  document.getElementById('fields-slb').classList.toggle('hidden', MODE !== 'slb');
+  document.getElementById('fields-salestype').classList.toggle('hidden', MODE !== 'salestype');
+  els.termsCard.classList.add('hidden');
+  els.resultsCard.classList.add('hidden');
+  els.scheduleCard.classList.add('hidden');
+  els.jeCard.classList.add('hidden');
+  els.extractBtn.textContent = '① AI로 계약조건 추출';
+  setStatus(els.extractStatus, '', null);
+});
+
+/* ---------------- file upload ---------------- */
+els.fileInput.addEventListener('change', (e) => {
+  const file = e.target.files[0];
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = (ev) => { els.contractText.value = ev.target.result; };
+  reader.onerror = () => setStatus(els.extractStatus, '파일을 읽지 못했습니다.', 'err');
+  reader.readAsText(file, 'utf-8');
+});
+
+function setStatus(node, msg, kind){ node.textContent = msg||''; node.className = 'status'+(kind?' '+kind:''); }
+function fmt(n, digits){
+  if (n===null||n===undefined||isNaN(n)) return '-';
+  const d = digits===undefined?0:digits;
+  return Number(n).toLocaleString('ko-KR',{minimumFractionDigits:d, maximumFractionDigits:d});
+}
+
+/* ================= PV / rate helpers ================= */
+const FREQ_MONTHS = { monthly:1, quarterly:3, semiannual:6, annual:12 };
+function periodRateFromAnnual(pct, periodMonths){ return Math.pow(1+pct/100, periodMonths/12)-1; }
+function annualFromPeriodRate(r, periodMonths){ return (Math.pow(1+r, 12/periodMonths)-1)*100; }
+function pvOrdinaryAnnuity(payment, r, n){ if (r===0) return payment*n; return payment*(1-Math.pow(1+r,-n))/r; }
+function pvAnnuityDue(payment, r, n){ return pvOrdinaryAnnuity(payment, r, n)*(1+r); }
+function pvLumpSum(amount, r, n){ if (!amount) return 0; return amount/Math.pow(1+r, n); }
+function solveRate(targetPV, cashflowFn, lo=-0.9, hi=5, iters=200){
+  let a=lo, b=hi;
+  for (let i=0;i<iters;i++){ const mid=(a+b)/2; if (cashflowFn(mid)>targetPV) a=mid; else b=mid; }
+  return (a+b)/2;
+}
+
+/* ================= Gemini extraction schemas ================= */
+const GENERAL_SCHEMA = {
+  type:"object",
+  properties:{
+    asset_description:{type:"string"}, currency:{type:"string"}, commencement_date:{type:"string"},
+    lease_term_months:{type:"number"}, renewal_option_reasonably_certain:{type:"boolean"}, renewal_additional_months:{type:"number"},
+    payment_amount:{type:"number"}, payment_frequency:{type:"string", enum:["monthly","quarterly","semiannual","annual"]},
+    payment_timing:{type:"string", enum:["advance","arrears"]},
+    discount_rate_stated_percent:{type:"number"}, has_stated_discount_rate:{type:"boolean"},
+    initial_direct_costs:{type:"number"}, lease_incentives:{type:"number"}, restoration_cost_estimate:{type:"number"},
+    purchase_option_reasonably_certain:{type:"boolean"}, purchase_option_price:{type:"number"},
+    useful_life_months:{type:"number"}, underlying_asset_low_value:{type:"boolean"}, notes:{type:"string"}
+  },
+  required:["asset_description","currency","commencement_date","lease_term_months","renewal_option_reasonably_certain",
+    "renewal_additional_months","payment_amount","payment_frequency","payment_timing","discount_rate_stated_percent",
+    "has_stated_discount_rate","initial_direct_costs","lease_incentives","restoration_cost_estimate",
+    "purchase_option_reasonably_certain","purchase_option_price","useful_life_months","underlying_asset_low_value","notes"]
+};
+const SLB_SCHEMA = {
+  type:"object",
+  properties:{
+    asset_description:{type:"string"}, currency:{type:"string"}, sale_date:{type:"string"},
+    carrying_amount_before_sale:{type:"number"}, fair_value_of_asset:{type:"number"}, sale_proceeds:{type:"number"},
+    sale_qualifies_as_sale:{type:"boolean"},
+    leaseback_term_months:{type:"number"}, leaseback_payment_amount:{type:"number"},
+    leaseback_payment_frequency:{type:"string", enum:["monthly","quarterly","semiannual","annual"]},
+    leaseback_payment_timing:{type:"string", enum:["advance","arrears"]},
+    leaseback_discount_rate_stated_percent:{type:"number"}, has_stated_discount_rate:{type:"boolean"},
+    notes:{type:"string"}
+  },
+  required:["asset_description","currency","sale_date","carrying_amount_before_sale","fair_value_of_asset","sale_proceeds",
+    "sale_qualifies_as_sale","leaseback_term_months","leaseback_payment_amount","leaseback_payment_frequency",
+    "leaseback_payment_timing","leaseback_discount_rate_stated_percent","has_stated_discount_rate","notes"]
+};
+const SALESTYPE_SCHEMA = {
+  type:"object",
+  properties:{
+    asset_description:{type:"string"}, currency:{type:"string"}, commencement_date:{type:"string"},
+    fair_value_of_asset:{type:"number"}, carrying_amount_of_asset:{type:"number"}, initial_direct_costs:{type:"number"},
+    payment_amount:{type:"number"}, payment_frequency:{type:"string", enum:["monthly","quarterly","semiannual","annual"]},
+    payment_timing:{type:"string", enum:["advance","arrears"]}, lease_term_months:{type:"number"},
+    guaranteed_residual_value:{type:"number"}, unguaranteed_residual_value:{type:"number"},
+    rate_implicit_stated_percent:{type:"number"}, has_stated_rate_implicit:{type:"boolean"}, notes:{type:"string"}
+  },
+  required:["asset_description","currency","commencement_date","fair_value_of_asset","carrying_amount_of_asset",
+    "initial_direct_costs","payment_amount","payment_frequency","payment_timing","lease_term_months",
+    "guaranteed_residual_value","unguaranteed_residual_value","rate_implicit_stated_percent","has_stated_rate_implicit","notes"]
+};
+
+const SYSTEM_INSTRUCTIONS = {
+  general: `당신은 K-IFRS 제1116호에 정통한 회계 전문가입니다. 리스이용자(lessee) 관점에서 리스 계약서 원문을 읽고
+회계처리에 필요한 항목을 추출하세요. 금액은 통화기호 없이 숫자만. 명시되지 않은 항목은 0/false로 두고 notes에 이유를 남기세요.
+할인율이 명시되어 있으면 has_stated_discount_rate=true. 저가자산 여부는 신품 기준 소액(통상 미화 5천 달러 상당 이하)인지로 판단.
+반드시 지정된 JSON 스키마로만 응답하세요.`,
+  slb: `당신은 K-IFRS 제1116호(리스) 및 제1115호(고객과의 계약에서 생기는 수익)에 정통한 회계 전문가입니다.
+아래는 자산을 매각한 뒤 다시 리스(리스백)하는 판매후리스 계약서입니다. 매도자-리스이용자 관점에서 정보를 추출하세요.
+sale_qualifies_as_sale은 자산 통제가 실질적으로 매수자에게 이전되는지(재매입약정, 금융약정 성격 여부 등)를 근거로 최선의 판단을 하고
+그 근거를 notes에 남기세요. 금액은 숫자만. 명시되지 않은 항목은 0/false로 두세요. 반드시 지정된 JSON 스키마로만 응답하세요.`,
+  salestype: `당신은 K-IFRS 제1116호에 정통한 회계 전문가입니다. 아래는 제조자 또는 판매자가 리스제공자로서 체결한
+판매형리스(금융리스) 계약서입니다. 리스제공자 관점에서 정보를 추출하세요. 공정가치와 원가(장부금액), 리스제공자의
+내재이자율(명시된 경우만)을 구분해서 추출하세요. 잔존가치는 다음 기준으로 두 가지로 구분하세요:
+(1) 보증잔존가치 — 리스이용자, 리스이용자의 특수관계자, 또는 "리스제공자와 특수관계가 없는" 제3자가 보증한 금액의 합
+(리스이용자의 보증인지 제3자의 보증인지는 중요하지 않으며, 보증자가 리스제공자와 특수관계가 있는지만 중요함).
+(2) 무보증잔존가치 — 보증이 전혀 없거나 리스제공자의 특수관계자만 보증한 금액. 이 구분이 계약서에 명확하지 않으면
+notes에 그 불확실성을 남기고 보수적으로 무보증으로 분류하세요. 금액은 숫자만. 명시되지 않은 항목은 0/false로
+두고 notes에 이유를 남기세요. 반드시 지정된 JSON 스키마로만 응답하세요.`
+};
+
+function schemaForMode(){ return MODE==='general'?GENERAL_SCHEMA : MODE==='slb'?SLB_SCHEMA : SALESTYPE_SCHEMA; }
+
+async function extractTerms(contractText, apiKey, model){
+  const url = `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent`;
+  const body = {
+    system_instruction:{ parts:[{ text: SYSTEM_INSTRUCTIONS[MODE] }] },
+    contents:[{ role:"user", parts:[{ text:"다음 계약서를 분석하세요:\\n\\n"+contractText }] }],
+    generationConfig:{ responseMimeType:"application/json", responseSchema: schemaForMode(), temperature:0.1 }
+  };
+  const resp = await fetch(url, { method:"POST", headers:{ "Content-Type":"application/json", "x-goog-api-key":apiKey }, body: JSON.stringify(body) });
+  if (!resp.ok){ const t = await resp.text(); throw new Error(`Gemini API 오류 (${resp.status}): ${t.slice(0,300)}`); }
+  const data = await resp.json();
+  const cand = data.candidates && data.candidates[0];
+  if (!cand || !cand.content || !cand.content.parts || !cand.content.parts[0]) throw new Error('Gemini 응답에서 결과를 찾지 못했습니다.');
+  return JSON.parse(cand.content.parts.map(p=>p.text||'').join(''));
+}
+
+els.extractBtn.addEventListener('click', async () => {
+  const text = els.contractText.value.trim();
+  const apiKey = els.apiKey.value.trim();
+  const model = els.modelSelect.value;
+  if (!text){ setStatus(els.extractStatus,'계약서 내용을 입력하세요.','err'); return; }
+  if (!apiKey){ setStatus(els.extractStatus,'Gemini API 키를 입력하세요.','err'); return; }
+  els.extractBtn.disabled = true;
+  setStatus(els.extractStatus, 'Gemini가 계약서를 읽는 중...', 'busy');
+  try{
+    const terms = await extractTerms(text, apiKey, model);
+    if (MODE==='general') fillGeneralForm(terms);
+    else if (MODE==='slb') fillSLBForm(terms);
+    else fillSalesTypeForm(terms);
+    els.termsCard.classList.remove('hidden');
+    els.termsCard.scrollIntoView({behavior:'smooth', block:'start'});
+    setStatus(els.extractStatus, '추출 완료. 아래 값을 확인/수정하세요.', 'ok');
+  }catch(err){
+    console.error(err);
+    setStatus(els.extractStatus, err.message||'추출 중 오류가 발생했습니다.', 'err');
+  }finally{ els.extractBtn.disabled = false; }
+});
+
+/* ---------------- fill forms ---------------- */
+function fillGeneralForm(t){
+  document.getElementById('g_asset').value = t.asset_description||'';
+  document.getElementById('g_start').value = t.commencement_date||'';
+  document.getElementById('g_currency').value = t.currency||'KRW';
+  document.getElementById('g_term').value = t.lease_term_months||0;
+  document.getElementById('g_renewal_certain').value = String(!!t.renewal_option_reasonably_certain);
+  document.getElementById('g_renewal_months').value = t.renewal_additional_months||0;
+  document.getElementById('g_payment').value = t.payment_amount||0;
+  document.getElementById('g_freq').value = t.payment_frequency||'monthly';
+  document.getElementById('g_timing').value = t.payment_timing||'arrears';
+  document.getElementById('g_rate_stated').value = t.has_stated_discount_rate ? (t.discount_rate_stated_percent||0) : '';
+  document.getElementById('g_rate_used').value = t.has_stated_discount_rate ? (t.discount_rate_stated_percent||0) : '';
+  document.getElementById('g_purchase_certain').value = String(!!t.purchase_option_reasonably_certain);
+  document.getElementById('g_purchase_price').value = t.purchase_option_price||0;
+  document.getElementById('g_useful_life').value = t.useful_life_months||0;
+  document.getElementById('g_low_value').value = String(!!t.underlying_asset_low_value);
+  document.getElementById('g_idc').value = t.initial_direct_costs||0;
+  document.getElementById('g_incentive').value = t.lease_incentives||0;
+  document.getElementById('g_restoration').value = t.restoration_cost_estimate||0;
+  document.getElementById('g_notes').value = t.notes||'';
+  els.eventsList.innerHTML = ''; eventRowSeq = 0; updateEventCount();
+  renderExemptionNotice(t);
+}
+function fillSLBForm(t){
+  document.getElementById('s_asset').value = t.asset_description||'';
+  document.getElementById('s_date').value = t.sale_date||'';
+  document.getElementById('s_currency').value = t.currency||'KRW';
+  document.getElementById('s_carrying').value = t.carrying_amount_before_sale||0;
+  document.getElementById('s_fairvalue').value = t.fair_value_of_asset||0;
+  document.getElementById('s_proceeds').value = t.sale_proceeds||0;
+  document.getElementById('s_qualifies').value = String(t.sale_qualifies_as_sale !== false);
+  document.getElementById('s_payment').value = t.leaseback_payment_amount||0;
+  document.getElementById('s_freq').value = t.leaseback_payment_frequency||'monthly';
+  document.getElementById('s_timing').value = t.leaseback_payment_timing||'arrears';
+  document.getElementById('s_term').value = t.leaseback_term_months||0;
+  document.getElementById('s_rate').value = t.has_stated_discount_rate ? (t.leaseback_discount_rate_stated_percent||0) : '';
+  document.getElementById('s_notes').value = t.notes||'';
+  els.exemptionNotice.innerHTML = '';
+}
+function fillSalesTypeForm(t){
+  document.getElementById('t_asset').value = t.asset_description||'';
+  document.getElementById('t_start').value = t.commencement_date||'';
+  document.getElementById('t_currency').value = t.currency||'KRW';
+  document.getElementById('t_fairvalue').value = t.fair_value_of_asset||0;
+  document.getElementById('t_cost').value = t.carrying_amount_of_asset||0;
+  document.getElementById('t_idc').value = t.initial_direct_costs||0;
+  document.getElementById('t_payment').value = t.payment_amount||0;
+  document.getElementById('t_freq').value = t.payment_frequency||'monthly';
+  document.getElementById('t_timing').value = t.payment_timing||'arrears';
+  document.getElementById('t_term').value = t.lease_term_months||0;
+  document.getElementById('t_gres').value = t.guaranteed_residual_value||0;
+  document.getElementById('t_ures').value = t.unguaranteed_residual_value||0;
+  document.getElementById('t_rate').value = t.has_stated_rate_implicit ? (t.rate_implicit_stated_percent||0) : '';
+  document.getElementById('t_notes').value = t.notes||'';
+  els.exemptionNotice.innerHTML = '';
+}
+
+function renderExemptionNotice(t){
+  const totalMonths = (Number(t.lease_term_months)||0) + (t.renewal_option_reasonably_certain ? (Number(t.renewal_additional_months)||0) : 0);
+  const shortTerm = totalMonths<=12 && !t.purchase_option_reasonably_certain;
+  const lowValue = !!t.underlying_asset_low_value;
+  let html = '';
+  if (shortTerm || lowValue){
+    html = `<div class="callout warn"><b>실무 간편법 적용 가능성 있음.</b> `
+      + (shortTerm?'총 리스기간이 12개월 이하이고 구매선택권 가능성도 낮아 <b>단기리스 면제</b> 적용 가능. ':'')
+      + (lowValue?'기초자산이 <b>소액자산</b>으로 판단되어 저가자산 리스 면제 적용 가능. ':'')
+      + `면제를 적용하면 리스부채·사용권자산을 인식하지 않습니다. 아래 계산은 면제를 적용하지 않는 가정으로 계속 진행됩니다.</div>`;
+  } else {
+    html = `<div class="callout">단기리스·소액자산 면제 대상에 해당하지 않는 것으로 보입니다.</div>`;
+  }
+  els.exemptionNotice.innerHTML = html;
+}
+
+/* ---------------- event list UI (general mode) ---------------- */
+function eventRowTemplate(id){
+  return `
+  <div class="event-item" data-id="${id}">
+    <div class="event-item-head">
+      <span class="tag">이벤트 #${id}</span>
+      <button class="btn danger-o" type="button" onclick="removeEventRow(${id})">삭제</button>
+    </div>
+    <div class="row3">
+      <div class="field"><label>유형</label>
+        <select id="ev_type_${id}">
+          <option value="index">변동리스료 재측정(지수연동)</option>
+          <option value="scope_decrease">리스변경 — 범위 축소</option>
+          <option value="modification">리스변경 — 기타 조건변경</option>
+        </select>
+      </div>
+      <div class="field"><label>발생 회차(기간 번호)</label><input type="number" id="ev_period_${id}" min="1" value="1"></div>
+      <div class="field"><label>변경 후 지급액(1회) — 미변경 시 비워두기</label><input type="number" id="ev_payment_${id}"></div>
+    </div>
+    <div class="row3">
+      <div class="field"><label>변경 후 연 할인율(%) — 지수재측정은 미적용</label><input type="number" step="0.01" id="ev_rate_${id}"></div>
+      <div class="field"><label>범위축소비율(%) — 범위축소 전용</label><input type="number" step="0.1" id="ev_pct_${id}"></div>
+      <div class="field"><label>잔여 리스기간 변경(개월) — 선택</label><input type="number" id="ev_months_${id}"></div>
+    </div>
+    <div class="field"><label>메모</label><input type="text" id="ev_note_${id}" placeholder="예: 20X6년 지수 개정에 따른 재측정"></div>
+  </div>`;
+}
+function addEventRow(){
+  eventRowSeq += 1;
+  const div = document.createElement('div');
+  div.innerHTML = eventRowTemplate(eventRowSeq);
+  els.eventsList.appendChild(div.firstElementChild);
+  updateEventCount();
+}
+function removeEventRow(id){
+  const node = els.eventsList.querySelector(`.event-item[data-id="${id}"]`);
+  if (node) node.remove();
+  updateEventCount();
+}
+function updateEventCount(){ els.eventCount.textContent = els.eventsList.children.length; }
+els.addEventBtn.addEventListener('click', addEventRow);
+window.removeEventRow = removeEventRow;
+
+function readEvents(){
+  const items = [...els.eventsList.querySelectorAll('.event-item')];
+  return items.map(node => {
+    const id = node.dataset.id;
+    const g = suf => document.getElementById(`ev_${suf}_${id}`);
+    const paymentVal = g('payment').value;
+    const rateVal = g('rate').value;
+    const monthsVal = g('months').value;
+    return {
+      type: g('type').value,
+      atPeriod: Math.max(1, Math.round(Number(g('period').value)||1)),
+      newPayment: paymentVal===''? undefined : Number(paymentVal),
+      newRatePct: rateVal===''? undefined : Number(rateVal),
+      decreasePct: Number(g('pct').value)||0,
+      newRemainingMonths: monthsVal===''? undefined : Number(monthsVal),
+      note: g('note').value||''
+    };
+  });
+}
+
+/* ================= GENERAL LEASE compute ================= */
+function readGeneralForm(){
+  const g = id => document.getElementById(id);
+  return {
+    currency: g('g_currency').value || 'KRW',
+    term: Number(g('g_term').value)||0,
+    renewalCertain: g('g_renewal_certain').value==='true',
+    renewalMonths: Number(g('g_renewal_months').value)||0,
+    payment: Number(g('g_payment').value)||0,
+    freq: g('g_freq').value,
+    timing: g('g_timing').value,
+    rateUsedPct: Number(g('g_rate_used').value)||0,
+    purchaseCertain: g('g_purchase_certain').value==='true',
+    purchasePrice: Number(g('g_purchase_price').value)||0,
+    usefulLifeMonths: Number(g('g_useful_life').value)||0,
+    idc: Number(g('g_idc').value)||0,
+    incentive: Number(g('g_incentive').value)||0,
+    restoration: Number(g('g_restoration').value)||0,
+  };
+}
+
+function computeGeneralWithEvents(f, events){
+  const periodMonths = FREQ_MONTHS[f.freq]||1;
+  const totalLeaseMonths = f.term + (f.renewalCertain? f.renewalMonths:0);
+  const n0 = Math.max(1, Math.round(totalLeaseMonths/periodMonths));
+  const r0 = periodRateFromAnnual(f.rateUsedPct, periodMonths);
+  const pvFn = f.timing==='advance' ? pvAnnuityDue : pvOrdinaryAnnuity;
+
+  let liabilityInitial = pvFn(f.payment, r0, n0);
+  if (f.purchaseCertain && f.purchasePrice) liabilityInitial += f.purchasePrice/Math.pow(1+r0, n0);
+  const rouInitial = liabilityInitial + f.idc + f.restoration - f.incentive;
+  {
+    const debitTotal = rouInitial + f.incentive;
+    const creditTotal = liabilityInitial + f.idc + f.restoration;
+    if (Math.abs(debitTotal - creditTotal) > 1){
+      console.warn('[검증 실패] 일반 리스 최초 분개 불일치:', debitTotal, 'vs', creditTotal);
+    }
+  }
+
+  // K-IFRS 1116 문단 32: 구매선택권 행사가 확실하거나 소유권이 이전되는 경우에만
+  // 기초자산의 내용연수 전체에 걸쳐 상각(내용연수가 리스기간보다 길어도 됨).
+  // 그 외(리스종료일에 자산을 반환하는 일반적인 경우)에는 리스기간과 내용연수 중 짧은 기간으로 상각.
+  let depMonths;
+  if (f.purchaseCertain && f.usefulLifeMonths>0){
+    depMonths = f.usefulLifeMonths;
+  } else if (f.usefulLifeMonths>0){
+    depMonths = Math.min(f.usefulLifeMonths, totalLeaseMonths);
+  } else {
+    depMonths = totalLeaseMonths;
+  }
+  const depPeriods0 = Math.max(1, Math.round(depMonths/periodMonths));
+  const depTiedToLeaseTerm = (depPeriods0 === n0);
+
+  let liabBal = liabilityInitial, rouBal = rouInitial;
+  let currentPayment = f.payment, currentR = r0;
+  let remainingPeriods = n0, depRemainingPeriods = depPeriods0;
+  let perPeriodDep = rouBal/depRemainingPeriods;
+
+  const liabSchedule = [], rouSchedule = [], log = [];
+  let cumGain = 0;
+  const sortedEvents = [...events].sort((a,b)=>a.atPeriod-b.atPeriod);
+  let ei = 0, period = 1;
+
+  while ((remainingPeriods>0 || depRemainingPeriods>0) && period<2000){
+    while (ei<sortedEvents.length && sortedEvents[ei].atPeriod===period){
+      const ev = sortedEvents[ei];
+      if (ev.type==='index'){
+        const newPay = ev.newPayment!==undefined? ev.newPayment : currentPayment;
+        const newPV = pvFn(newPay, currentR, remainingPeriods);
+        const delta = newPV - liabBal;
+        liabBal = newPV; currentPayment = newPay; rouBal += delta;
+        if (rouBal<0){ cumGain += -rouBal; rouBal = 0; }
+        log.push({period, note:`변동리스료 재측정: 지급액 ${fmt(newPay)}로 변경, 부채 조정 ${fmt(delta)}`});
+      } else if (ev.type==='scope_decrease'){
+        const pct = (ev.decreasePct||0)/100;
+        const liabDecrease = liabBal*pct, rouDecrease = rouBal*pct;
+        const gainLoss = liabDecrease - rouDecrease;
+        liabBal -= liabDecrease; rouBal -= rouDecrease; cumGain += gainLoss;
+        currentPayment = ev.newPayment!==undefined? ev.newPayment : currentPayment*(1-pct);
+        if (ev.newRatePct!==undefined) currentR = periodRateFromAnnual(ev.newRatePct, periodMonths);
+        if (ev.newRemainingMonths!==undefined){
+          remainingPeriods = Math.max(1, Math.round(ev.newRemainingMonths/periodMonths));
+          if (depTiedToLeaseTerm) depRemainingPeriods = remainingPeriods;
+        }
+        perPeriodDep = depRemainingPeriods>0? rouBal/depRemainingPeriods : 0;
+        log.push({period, note:`리스변경(범위축소 ${ev.decreasePct}%): 손익 ${fmt(gainLoss)} 인식`});
+      } else if (ev.type==='modification'){
+        if (ev.newRatePct!==undefined) currentR = periodRateFromAnnual(ev.newRatePct, periodMonths);
+        if (ev.newRemainingMonths!==undefined){
+          remainingPeriods = Math.max(1, Math.round(ev.newRemainingMonths/periodMonths));
+          if (depTiedToLeaseTerm) depRemainingPeriods = remainingPeriods;
+        }
+        currentPayment = ev.newPayment!==undefined? ev.newPayment : currentPayment;
+        const newPV = pvFn(currentPayment, currentR, remainingPeriods);
+        const delta = newPV - liabBal;
+        liabBal = newPV; rouBal += delta;
+        if (rouBal<0){ cumGain += -rouBal; rouBal = 0; }
+        perPeriodDep = depRemainingPeriods>0? rouBal/depRemainingPeriods : 0;
+        log.push({period, note:`리스변경(조건변경): 부채 재측정 ${fmt(delta)}`});
+      }
+      ei++;
+    }
+    let eventHere = log.length>0 && log[log.length-1].period===period;
+
+    if (remainingPeriods>0){
+      const begin = liabBal;
+      const interest = begin*currentR;
+      const pay = currentPayment + ((remainingPeriods===1 && f.purchaseCertain)? f.purchasePrice:0);
+      let end = begin+interest-pay;
+      if (remainingPeriods===1) end = 0;
+      liabSchedule.push({period, begin, interest, pay, principal:pay-interest, end, event:eventHere});
+      liabBal = end; remainingPeriods--;
+    }
+    if (depRemainingPeriods>0){
+      const begin = rouBal;
+      let dep = (depRemainingPeriods===1)? begin : perPeriodDep;
+      dep = Math.min(dep, begin);
+      const end = Math.max(0, begin-dep);
+      rouSchedule.push({period, begin, dep, end});
+      rouBal = end; depRemainingPeriods--;
+    }
+    period++;
+  }
+  return { liabilityInitial, rouInitial, liabSchedule, rouSchedule, cumGain, log,
+    totalInterest: liabSchedule.reduce((s,x)=>s+x.interest,0),
+    totalDep: rouSchedule.reduce((s,x)=>s+x.dep,0) };
+}
+
+/* ================= SLB compute ================= */
+function readSLBForm(){
+  const g = id => document.getElementById(id);
+  return {
+    currency: g('s_currency').value||'KRW',
+    carryingAmount: Number(g('s_carrying').value)||0,
+    fairValue: Number(g('s_fairvalue').value)||0,
+    saleProceeds: Number(g('s_proceeds').value)||0,
+    saleQualifies: g('s_qualifies').value==='true',
+    payment: Number(g('s_payment').value)||0,
+    freq: g('s_freq').value,
+    timing: g('s_timing').value,
+    term: Number(g('s_term').value)||0,
+    rateUsedPct: Number(g('s_rate').value)||0,
+  };
+}
+function computeSLB(f){
+  const periodMonths = FREQ_MONTHS[f.freq]||1;
+  const n = Math.max(1, Math.round(f.term/periodMonths));
+  const pvFn = f.timing==='advance' ? pvAnnuityDue : pvOrdinaryAnnuity;
+
+  if (f.saleQualifies){
+    const r = periodRateFromAnnual(f.rateUsedPct, periodMonths);
+    const leasebackLiability = pvFn(f.payment, r, n);
+    let retainedRatio = f.fairValue>0 ? leasebackLiability/f.fairValue : 0;
+    let flag = null;
+    if (retainedRatio>1){ flag='리스백 지급액의 현재가치가 공정가치를 초과합니다 — 조건을 확인하세요.'; retainedRatio=1; }
+    const rouInitial = f.carryingAmount*retainedRatio;
+    const totalGain = f.fairValue - f.carryingAmount;
+    const gainRecognized = totalGain*(1-retainedRatio);
+    const offMarketFlag = (f.saleProceeds && Math.abs(f.saleProceeds-f.fairValue)>1) ?
+      '매각대금이 공정가치와 달라 추가 금융요소 조정이 필요할 수 있습니다(K-IFRS 1116 문단 101). 수동 검토 필요.' : null;
+    {
+      const debitTotal = f.fairValue + rouInitial;
+      const creditTotal = f.carryingAmount + leasebackLiability + gainRecognized;
+      if (Math.abs(debitTotal - creditTotal) > 1){
+        console.warn('[검증 실패] 판매후리스 최초 분개 불일치:', debitTotal, 'vs', creditTotal);
+      }
+    }
+
+    const liabSchedule = []; let bal = leasebackLiability;
+    for (let i=1;i<=n;i++){
+      const begin=bal, interest=begin*r, pay=f.payment;
+      let end = begin+interest-pay; if (i===n) end=0;
+      liabSchedule.push({period:i, begin, interest, pay, principal:pay-interest, end});
+      bal = end;
+    }
+    const depPerPeriod = rouInitial/n;
+    const rouSchedule = []; let rb = rouInitial;
+    for (let i=1;i<=n;i++){
+      const begin=rb; let dep=(i===n)?begin:depPerPeriod;
+      const end = Math.max(0, begin-dep);
+      rouSchedule.push({period:i, begin, dep, end}); rb = end;
+    }
+    return { mode:'sale', leasebackLiability, retainedRatio, rouInitial, totalGain, gainRecognized, flag, offMarketFlag,
+      liabSchedule, rouSchedule,
+      totalInterest: liabSchedule.reduce((s,x)=>s+x.interest,0),
+      totalDep: rouSchedule.reduce((s,x)=>s+x.dep,0) };
+  } else {
+    let r = f.rateUsedPct ? periodRateFromAnnual(f.rateUsedPct, periodMonths) : solveRate(f.saleProceeds, rr=>pvFn(f.payment, rr, n));
+    const financingLiabilityInitial = f.saleProceeds;
+    const liabSchedule = []; let bal = financingLiabilityInitial;
+    for (let i=1;i<=n;i++){
+      const begin=bal, interest=begin*r, pay=f.payment;
+      let end = begin+interest-pay; if (i===n) end=0;
+      liabSchedule.push({period:i, begin, interest, pay, principal:pay-interest, end});
+      bal = end;
+    }
+    return { mode:'financing', financingLiabilityInitial, impliedRatePct: annualFromPeriodRate(r, periodMonths),
+      liabSchedule, totalInterest: liabSchedule.reduce((s,x)=>s+x.interest,0) };
+  }
+}
+
+/* ================= SALES-TYPE compute ================= */
+function readSalesTypeForm(){
+  const g = id => document.getElementById(id);
+  return {
+    currency: g('t_currency').value||'KRW',
+    fairValue: Number(g('t_fairvalue').value)||0,
+    carryingAmount: Number(g('t_cost').value)||0,
+    idc: Number(g('t_idc').value)||0,
+    payment: Number(g('t_payment').value)||0,
+    freq: g('t_freq').value,
+    timing: g('t_timing').value,
+    term: Number(g('t_term').value)||0,
+    guaranteedResidual: Number(g('t_gres').value)||0,
+    unguaranteedResidual: Number(g('t_ures').value)||0,
+    rateImplicitPct: Number(g('t_rate').value)||0,
+    marketRatePct: Number(g('t_market_rate').value)||0,
+  };
+}
+function computeSalesType(f){
+  const periodMonths = FREQ_MONTHS[f.freq]||1;
+  const n = Math.max(1, Math.round(f.term/periodMonths));
+  const pvFn = f.timing==='advance' ? pvAnnuityDue : pvOrdinaryAnnuity;
+  // K-IFRS 1116 부록 A: 리스제공자 관점의 "보증잔존가치"는 리스이용자·그 특수관계자·리스제공자와
+  // 무관한 제3자의 보증을 모두 포함한다(리스이용자 보증인지 제3자 보증인지는 무관하며, 보증자가
+  // 리스제공자와 특수관계가 있는지만 구분 기준이 된다). "무보증잔존가치"는 보증이 없거나
+  // 리스제공자의 특수관계자만 보증한 부분이다.
+  const totalResidual = (f.guaranteedResidual||0) + (f.unguaranteedResidual||0);
+
+  // 리스의 실제(계약상) 내재이자율 — 없으면 공정가치로부터 역산. 이 값은 "인위적으로 낮은
+  // 이자율인지" 판단하는 기준으로만 쓰이고, 그 자체가 회계처리에 그대로 쓰이지는 않는다.
+  const rQuoted = f.rateImplicitPct ? periodRateFromAnnual(f.rateImplicitPct, periodMonths)
+    : solveRate(f.fairValue, rr => pvFn(f.payment, rr, n) + pvLumpSum(totalResidual, rr, n));
+  const quotedAnnualPct = annualFromPeriodRate(rQuoted, periodMonths);
+
+  // K-IFRS 1116 문단 71~73: 실제 내재이자율이 시장이자율보다 낮으면(=인위적으로 낮은 이자율)
+  // "순투자, 매출액, 매출원가, 이후의 이자수익" 전부를 시장이자율로 계산해서 판매손익이
+  // 부풀려지지 않도록 한다. 즉 순투자와 매출액·매출원가가 서로 다른 이자율로 계산되면
+  // 분개의 차변·대변이 맞지 않게 되므로, 두 이자율 중 더 높은 쪽(=효과적으로 적용되는 이자율)
+  // 하나만 일관되게 사용해야 한다.
+  const marketAnnualPct = f.marketRatePct || quotedAnnualPct;
+  const effectiveAnnualPct = Math.max(quotedAnnualPct, marketAnnualPct);
+  const r = periodRateFromAnnual(effectiveAnnualPct, periodMonths);
+  const rateWasLimited = effectiveAnnualPct > quotedAnnualPct + 1e-9;
+
+  const netInvestmentInitial = pvFn(f.payment, r, n) + pvLumpSum(totalResidual, r, n);
+  const pvLeasePayments = pvFn(f.payment, r, n) + pvLumpSum(f.guaranteedResidual||0, r, n);
+  const revenue = Math.min(f.fairValue, pvLeasePayments);
+  const costOfSale = f.carryingAmount - pvLumpSum(f.unguaranteedResidual||0, r, n) + (f.idc||0);
+  const sellingProfit = revenue - costOfSale;
+
+  const schedule = []; let bal = netInvestmentInitial;
+  for (let i=1;i<=n;i++){
+    const begin = bal;
+    const receipt = f.payment;
+    let interest, end;
+    if (f.timing === 'advance'){
+      const afterReceipt = begin - receipt;
+      interest = afterReceipt * r;
+      end = afterReceipt + interest;
+    } else {
+      interest = begin * r;
+      end = begin + interest - receipt;
+    }
+    schedule.push({period:i, begin, interest, receipt, end});
+    bal = end;
+  }
+  // 자체 검증: 최초 인식 분개(차변: 순투자+매출원가, 대변: 매출+재고자산+IDC현금지급)가 실제로 일치하는지 확인
+  const debitTotal = netInvestmentInitial + costOfSale;
+  const creditTotal = revenue + f.carryingAmount + (f.idc||0);
+  if (Math.abs(debitTotal - creditTotal) > 1){
+    console.warn('[검증 실패] 판매형리스 최초 분개 불일치:', debitTotal, 'vs', creditTotal);
+  }
+  return { impliedAnnualPct: effectiveAnnualPct, quotedAnnualPct, netInvestmentInitial, revenue, costOfSale, sellingProfit, totalResidual, schedule,
+    rateWasLimited, marketRatePct: marketAnnualPct,
+    totalInterestIncome: schedule.reduce((s,x)=>s+x.interest,0) };
+}
+
+/* ================= calc dispatch & render ================= */
+els.calcBtn.addEventListener('click', () => {
+  try{
+    setStatus(els.calcStatus, '계산 중...', 'busy');
+    if (MODE==='general'){
+      const rateField = document.getElementById('g_rate_used');
+      if (rateField.value.trim()===''){
+        setStatus(els.calcStatus, '할인율이 입력되지 않았습니다. 계약상 할인율이 없다면 증분차입이자율 등을 추정해 "사용할 할인율"에 입력하세요.', 'err');
+        rateField.classList.add('field-error');
+        rateField.focus();
+        rateField.addEventListener('input', function clearErr(){ rateField.classList.remove('field-error'); rateField.removeEventListener('input', clearErr); });
+        return;
+      }
+      const f = readGeneralForm();
+      if (!f.payment || !f.term){ setStatus(els.calcStatus,'지급액과 리스기간을 확인하세요.','err'); return; }
+      const events = readEvents();
+      const r = computeGeneralWithEvents(f, events);
+      renderGeneral(f, r);
+    } else if (MODE==='slb'){
+      const qualifies = document.getElementById('s_qualifies').value==='true';
+      const rateField = document.getElementById('s_rate');
+      if (qualifies && rateField.value.trim()===''){
+        setStatus(els.calcStatus, '할인율이 입력되지 않았습니다. 계약상 할인율이 없다면 증분차입이자율 등을 추정해 "할인율"에 입력하세요.', 'err');
+        rateField.classList.add('field-error');
+        rateField.focus();
+        rateField.addEventListener('input', function clearErr(){ rateField.classList.remove('field-error'); rateField.removeEventListener('input', clearErr); });
+        return;
+      }
+      const f = readSLBForm();
+      if (!f.payment || !f.term){ setStatus(els.calcStatus,'리스백 지급액과 기간을 확인하세요.','err'); return; }
+      const r = computeSLB(f);
+      renderSLB(f, r);
+    } else {
+      const marketRateField = document.getElementById('t_market_rate');
+      if (marketRateField.value.trim()===''){
+        setStatus(els.calcStatus, '시장이자율이 입력되지 않았습니다. K-IFRS 1116 문단 71(a)에 따라 매출액·매출원가는 항상 일반 상거래의 시장이자율로 계산해야 합니다.', 'err');
+        marketRateField.classList.add('field-error');
+        marketRateField.focus();
+        marketRateField.addEventListener('input', function clearErr(){ marketRateField.classList.remove('field-error'); marketRateField.removeEventListener('input', clearErr); });
+        return;
+      }
+      const f = readSalesTypeForm();
+      if (!f.payment || !f.term || !f.fairValue){ setStatus(els.calcStatus,'지급액, 리스기간, 공정가치를 확인하세요.','err'); return; }
+      const r = computeSalesType(f);
+      renderSalesType(f, r);
+    }
+    setStatus(els.calcStatus, '계산 완료.', 'ok');
+    els.resultsCard.classList.remove('hidden');
+    els.scheduleCard.classList.remove('hidden');
+    els.jeCard.classList.remove('hidden');
+    els.resultsCard.scrollIntoView({behavior:'smooth', block:'start'});
+  }catch(err){
+    console.error(err);
+    setStatus(els.calcStatus, err.message||'계산 중 오류가 발생했습니다.', 'err');
+  }
+});
+
+function labelFreq(freq){ return {monthly:'매월',quarterly:'매분기',semiannual:'매반기',annual:'매년'}[freq]||freq; }
+
+function renderGeneral(f, r){
+  const cur = f.currency;
+  els.resultsTitle.textContent = '최초 인식 요약 (일반 리스이용자)';
+  els.summaryGrid.innerHTML = `
+    <div class="summary-cell"><div class="k">리스부채 최초 인식액</div><div class="v liab">${fmt(r.liabilityInitial)} ${cur}</div></div>
+    <div class="summary-cell"><div class="k">사용권자산 최초 인식액</div><div class="v rou">${fmt(r.rouInitial)} ${cur}</div></div>
+    <div class="summary-cell"><div class="k">적용 할인율(연)</div><div class="v">${fmt(f.rateUsedPct,2)}%</div></div>
+    <div class="summary-cell"><div class="k">지급 주기/시점</div><div class="v" style="font-size:14px">${labelFreq(f.freq)} · ${f.timing==='advance'?'선급':'후급'}</div></div>
+    <div class="summary-cell"><div class="k">총 이자비용</div><div class="v">${fmt(r.totalInterest)} ${cur}</div></div>
+    <div class="summary-cell"><div class="k">총 감가상각비</div><div class="v">${fmt(r.totalDep)} ${cur}</div></div>
+    <div class="summary-cell"><div class="k">재측정/변경 누적 손익</div><div class="v" style="color:${r.cumGain<0?'var(--accent)':'var(--danger)'}">${fmt(-r.cumGain)} ${cur}</div></div>
+    <div class="summary-cell"><div class="k">이벤트 건수</div><div class="v">${r.log.length}</div></div>
+  `;
+  els.resultsExtra.innerHTML = r.log.length ?
+    `<div class="callout"><b>재측정/변경 이력</b><br>${r.log.map(l=>`· ${l.period}회차: ${l.note}`).join('<br>')}</div>` : '';
+
+  els.scheduleTitle.textContent = '상각표 (리스부채 · 사용권자산)';
+  els.scheduleHead.innerHTML = `<tr>
+    <th>기간</th><th>기초 리스부채</th><th>이자비용</th><th>지급액</th><th>원금상환</th><th>기말 리스부채</th>
+    <th>기초 사용권자산</th><th>감가상각비</th><th>기말 사용권자산</th></tr>`;
+  const maxLen = Math.max(r.liabSchedule.length, r.rouSchedule.length);
+  let rows = '';
+  for (let i=0;i<maxLen;i++){
+    const L = r.liabSchedule[i], R = r.rouSchedule[i];
+    rows += `<tr class="${L&&L.event?'event-row':''}">
+      <td>${i+1}${L&&L.event?' ★':''}</td>
+      <td>${L?fmt(L.begin):'-'}</td><td>${L?fmt(L.interest):'-'}</td><td>${L?fmt(L.pay):'-'}</td>
+      <td>${L?fmt(L.principal):'-'}</td><td>${L?fmt(L.end):'-'}</td>
+      <td>${R?fmt(R.begin):'-'}</td><td>${R?fmt(R.dep):'-'}</td><td>${R?fmt(R.end):'-'}</td>
+    </tr>`;
+  }
+  els.scheduleBody.innerHTML = rows;
+
+  els.jeBody.innerHTML = `
+    <div class="je"><div class="t">① 리스개시일 (최초 인식)</div><table>
+      <tr><td>(차) 사용권자산</td><td>${fmt(r.rouInitial)}</td><td></td><td></td></tr>
+      ${ f.incentive>0 ? `<tr><td>(차) 현금(리스인센티브 수취)</td><td>${fmt(f.incentive)}</td><td></td><td></td></tr>` : '' }
+      <tr><td>(대) 리스부채</td><td></td><td>${fmt(r.liabilityInitial)}</td><td></td></tr>
+      ${ f.idc>0 ? `<tr><td>(대) 현금(리스개설직접원가 지급)</td><td></td><td>${fmt(f.idc)}</td><td></td></tr>` : '' }
+      ${ f.restoration>0 ? `<tr><td>(대) 복구충당부채</td><td></td><td>${fmt(f.restoration)}</td><td></td></tr>` : '' }
+    </table></div>
+    <div class="je"><div class="t">② 매 회계기간 (1회차 예시)</div>
+      <table>
+        <tr><td>(차) 이자비용</td><td>${fmt(r.liabSchedule[0]?.interest)}</td><td></td><td></td></tr>
+        <tr><td>(차) 리스부채</td><td>${fmt(r.liabSchedule[0]?.principal)}</td><td></td><td></td></tr>
+        <tr><td>(대) 현금</td><td></td><td>${fmt(r.liabSchedule[0]?.pay)}</td><td></td></tr>
+      </table>
+      <table style="margin-top:8px;">
+        <tr><td>(차) 감가상각비</td><td>${fmt(r.rouSchedule[0]?.dep)}</td><td></td><td></td></tr>
+        <tr><td>(대) 감가상각누계액</td><td></td><td>${fmt(r.rouSchedule[0]?.dep)}</td><td></td></tr>
+      </table>
+    </div>
+    ${ r.log.length ? `<div class="je"><div class="t">③ 재측정/변경 시점 (개념)</div>
+      <table><tr><td>변동 방향에 따라</td><td>(차/대) 사용권자산</td><td>조정액</td><td></td></tr>
+      <tr><td></td><td>(대/차) 리스부채</td><td>조정액</td><td></td></tr>
+      <tr><td>범위축소 손익 발생 시</td><td>(차/대) 리스부채·사용권자산 비례분</td><td></td><td>(대/차) 리스변경손익</td></tr></table></div>` : '' }
+  `;
+}
+
+function renderSLB(f, r){
+  const cur = f.currency;
+  if (r.mode==='sale'){
+    els.resultsTitle.textContent = '최초 인식 요약 (판매후리스 — 판매로 처리)';
+    els.summaryGrid.innerHTML = `
+      <div class="summary-cell"><div class="k">리스백 리스부채</div><div class="v liab">${fmt(r.leasebackLiability)} ${cur}</div></div>
+      <div class="summary-cell"><div class="k">사용권자산(보유 지분)</div><div class="v rou">${fmt(r.rouInitial)} ${cur}</div></div>
+      <div class="summary-cell"><div class="k">보유비율(Right retained)</div><div class="v">${fmt(r.retainedRatio*100,1)}%</div></div>
+      <div class="summary-cell"><div class="k">총 매각손익</div><div class="v">${fmt(r.totalGain)} ${cur}</div></div>
+      <div class="summary-cell"><div class="k">즉시 인식 손익</div><div class="v">${fmt(r.gainRecognized)} ${cur}</div></div>
+      <div class="summary-cell"><div class="k">총 이자비용(리스백)</div><div class="v">${fmt(r.totalInterest)} ${cur}</div></div>
+      <div class="summary-cell"><div class="k">총 감가상각비</div><div class="v">${fmt(r.totalDep)} ${cur}</div></div>
+      <div class="summary-cell"><div class="k">지급 주기/시점</div><div class="v" style="font-size:14px">${labelFreq(f.freq)} · ${f.timing==='advance'?'선급':'후급'}</div></div>
+    `;
+    els.resultsExtra.innerHTML = [r.flag, r.offMarketFlag].filter(Boolean).map(m=>`<div class="callout warn">${m}</div>`).join('');
+
+    els.scheduleTitle.textContent = '상각표 (리스백 리스부채 · 사용권자산)';
+    els.scheduleHead.innerHTML = `<tr><th>기간</th><th>기초 리스부채</th><th>이자비용</th><th>지급액</th><th>원금상환</th>
+      <th>기말 리스부채</th><th>기초 사용권자산</th><th>감가상각비</th><th>기말 사용권자산</th></tr>`;
+    let rows=''; const n=r.liabSchedule.length;
+    for (let i=0;i<n;i++){ const L=r.liabSchedule[i], R=r.rouSchedule[i];
+      rows += `<tr><td>${i+1}</td><td>${fmt(L.begin)}</td><td>${fmt(L.interest)}</td><td>${fmt(L.pay)}</td>
+        <td>${fmt(L.principal)}</td><td>${fmt(L.end)}</td><td>${fmt(R.begin)}</td><td>${fmt(R.dep)}</td><td>${fmt(R.end)}</td></tr>`;
+    }
+    els.scheduleBody.innerHTML = rows;
+
+    els.jeBody.innerHTML = `
+      <div class="je"><div class="t">① 매각·리스백 개시일</div><table>
+        <tr><td>(차) 현금</td><td>${fmt(f.fairValue)}</td><td></td><td></td></tr>
+        <tr><td>(차) 사용권자산</td><td>${fmt(r.rouInitial)}</td><td></td><td></td></tr>
+        <tr><td>(대) 유형자산(장부금액)</td><td></td><td>${fmt(f.carryingAmount)}</td><td></td></tr>
+        <tr><td>(대) 리스부채</td><td></td><td>${fmt(r.leasebackLiability)}</td><td></td></tr>
+        <tr><td>(대) 유형자산처분이익</td><td></td><td>${fmt(r.gainRecognized)}</td><td></td></tr>
+      </table>
+      ${ Math.abs(f.saleProceeds - f.fairValue) > 1 ? `<div class="hint" style="margin-top:6px;">
+        실제 매각대금(${fmt(f.saleProceeds)})이 공정가치(${fmt(f.fairValue)})와 차이(${fmt(f.saleProceeds-f.fairValue)})가 있습니다.
+        이 분개는 공정가치 기준으로 표시했으며, 그 차액은 K-IFRS 1116 문단 101에 따라 추가 금융요소 또는 선급리스료로
+        별도 조정해야 하지만 이 계산기에는 반영되어 있지 않습니다.</div>` : '' }
+      </div>
+      <div class="je"><div class="t">② 매 회계기간 (1회차 예시)</div>
+        <table>
+          <tr><td>(차) 이자비용</td><td>${fmt(r.liabSchedule[0]?.interest)}</td><td></td><td></td></tr>
+          <tr><td>(차) 리스부채</td><td>${fmt(r.liabSchedule[0]?.principal)}</td><td></td><td></td></tr>
+          <tr><td>(대) 현금</td><td></td><td>${fmt(r.liabSchedule[0]?.pay)}</td><td></td></tr>
+        </table>
+        <table style="margin-top:8px;">
+          <tr><td>(차) 감가상각비</td><td>${fmt(r.rouSchedule[0]?.dep)}</td><td></td><td></td></tr>
+          <tr><td>(대) 감가상각누계액</td><td></td><td>${fmt(r.rouSchedule[0]?.dep)}</td><td></td></tr>
+        </table>
+      </div>`;
+  } else {
+    els.resultsTitle.textContent = '최초 인식 요약 (판매후리스 — 금융약정으로 처리)';
+    els.summaryGrid.innerHTML = `
+      <div class="summary-cell"><div class="k">금융부채 최초 인식액</div><div class="v liab">${fmt(r.financingLiabilityInitial)} ${cur}</div></div>
+      <div class="summary-cell"><div class="k">내재이자율(연)</div><div class="v">${fmt(r.impliedRatePct,2)}%</div></div>
+      <div class="summary-cell"><div class="k">총 이자비용</div><div class="v">${fmt(r.totalInterest)} ${cur}</div></div>
+      <div class="summary-cell"><div class="k">지급 주기/시점</div><div class="v" style="font-size:14px">${labelFreq(f.freq)} · ${f.timing==='advance'?'선급':'후급'}</div></div>
+    `;
+    els.resultsExtra.innerHTML = `<div class="callout">판매 요건을 충족하지 못해 자산은 계속 장부에 남고, 수취한 매각대금은 <b>금융부채(차입금 성격)</b>로 인식합니다. 자산의 계속 감가상각은 이 계산과 별도로 관리하세요.</div>`;
+
+    els.scheduleTitle.textContent = '상각표 (금융부채)';
+    els.scheduleHead.innerHTML = `<tr><th>기간</th><th>기초 부채</th><th>이자비용</th><th>지급액</th><th>원금상환</th><th>기말 부채</th></tr>`;
+    let rows=''; r.liabSchedule.forEach((L,i)=>{
+      rows += `<tr><td>${i+1}</td><td>${fmt(L.begin)}</td><td>${fmt(L.interest)}</td><td>${fmt(L.pay)}</td><td>${fmt(L.principal)}</td><td>${fmt(L.end)}</td></tr>`;
+    });
+    els.scheduleBody.innerHTML = rows;
+
+    els.jeBody.innerHTML = `
+      <div class="je"><div class="t">① 매각대금 수취일</div><table>
+        <tr><td>(차) 현금</td><td>${fmt(f.saleProceeds)}</td><td></td><td></td></tr>
+        <tr><td>(대) 금융부채</td><td></td><td>${fmt(r.financingLiabilityInitial)}</td><td></td></tr>
+      </table></div>
+      <div class="je"><div class="t">② 매 회계기간 (1회차 예시)</div><table>
+        <tr><td>(차) 이자비용</td><td>${fmt(r.liabSchedule[0]?.interest)}</td><td></td><td></td></tr>
+        <tr><td>(차) 금융부채</td><td>${fmt(r.liabSchedule[0]?.principal)}</td><td></td><td></td></tr>
+        <tr><td>(대) 현금</td><td></td><td>${fmt(r.liabSchedule[0]?.pay)}</td><td></td></tr>
+      </table></div>`;
+  }
+}
+
+function renderSalesType(f, r){
+  const cur = f.currency;
+  els.resultsTitle.textContent = '최초 인식 요약 (판매형리스 — 리스제공자)';
+  els.summaryGrid.innerHTML = `
+    <div class="summary-cell"><div class="k">순투자(리스채권) 최초 인식액</div><div class="v liab">${fmt(r.netInvestmentInitial)} ${cur}</div></div>
+    <div class="summary-cell"><div class="k">계약상 내재이자율(연)</div><div class="v">${fmt(r.quotedAnnualPct,2)}%</div></div>
+    <div class="summary-cell"><div class="k">매출(수익) 인식액</div><div class="v rou">${fmt(r.revenue)} ${cur}</div></div>
+    <div class="summary-cell"><div class="k">매출원가</div><div class="v">${fmt(r.costOfSale)} ${cur}</div></div>
+    <div class="summary-cell"><div class="k">판매손익</div><div class="v" style="color:${r.sellingProfit>=0?'var(--accent)':'var(--danger)'}">${fmt(r.sellingProfit)} ${cur}</div></div>
+    <div class="summary-cell"><div class="k">시장이자율(연)</div><div class="v">${fmt(r.marketRatePct,2)}%</div></div>
+    <div class="summary-cell"><div class="k">실제 적용 이자율(연)</div><div class="v">${fmt(r.impliedAnnualPct,2)}%</div></div>
+    <div class="summary-cell"><div class="k">총 이자수익</div><div class="v">${fmt(r.totalInterestIncome)} ${cur}</div></div>
+  `;
+  els.resultsExtra.innerHTML = r.rateWasLimited
+    ? `<div class="callout warn"><b>인위적으로 낮은 이자율 감지 (K-IFRS 1116 문단 72~73).</b> 계약상 내재이자율(${fmt(r.quotedAnnualPct,2)}%)이 시장이자율(${fmt(r.marketRatePct,2)}%)보다 낮아,
+       순투자·매출액·매출원가·이자수익 <b>전부를 시장이자율(${fmt(r.marketRatePct,2)}%)</b> 하나로 일관되게 계산했습니다. (계약상 내재이자율은 판단 기준으로만 쓰이고 실제 회계처리에는 반영되지 않습니다.)</div>`
+    : `<div class="callout">계약상 내재이자율(${fmt(r.quotedAnnualPct,2)}%)이 시장이자율(${fmt(r.marketRatePct,2)}%) 이상이라 인위적으로 낮은 이자율에 해당하지 않습니다. 계약상 내재이자율을 그대로 사용했습니다.</div>`;
+
+  els.scheduleTitle.textContent = '순투자(리스채권) 상각표';
+  els.scheduleHead.innerHTML = `<tr><th>기간</th><th>기초 순투자</th><th>이자수익</th><th>수취액</th><th>기말 순투자</th></tr>`;
+  let rows=''; r.schedule.forEach((row,i)=>{
+    rows += `<tr><td>${i+1}</td><td>${fmt(row.begin)}</td><td>${fmt(row.interest)}</td><td>${fmt(row.receipt)}</td><td>${fmt(row.end)}</td></tr>`;
+  });
+  els.scheduleBody.innerHTML = rows;
+
+  els.jeBody.innerHTML = `
+    <div class="je"><div class="t">① 리스개시일 (최초 인식)</div><table>
+      <tr><td>(차) 리스채권(순투자)</td><td>${fmt(r.netInvestmentInitial)}</td><td></td><td></td></tr>
+      <tr><td>(차) 매출원가</td><td>${fmt(r.costOfSale)}</td><td></td><td></td></tr>
+      <tr><td>(대) 매출</td><td></td><td>${fmt(r.revenue)}</td><td></td></tr>
+      <tr><td>(대) 재고자산(기초자산 원가)</td><td></td><td>${fmt(f.carryingAmount)}</td><td></td></tr>
+      ${ f.idc>0 ? `<tr><td>(대) 현금(리스개설직접원가 지급)</td><td></td><td>${fmt(f.idc)}</td><td></td></tr>` : '' }
+    </table></div>
+    <div class="je"><div class="t">② 매 회계기간 (1회차 예시)</div><table>
+      <tr><td>(차) 현금</td><td>${fmt(r.schedule[0]?.receipt)}</td><td></td><td></td></tr>
+      <tr><td>(대) 이자수익</td><td></td><td>${fmt(r.schedule[0]?.interest)}</td><td></td></tr>
+      <tr><td>(대) 리스채권(원금회수분)</td><td></td><td>${fmt((r.schedule[0]?.receipt||0)-(r.schedule[0]?.interest||0))}</td><td></td></tr>
+    </table></div>`;
+}
+</script>
+</body>
+</html>
